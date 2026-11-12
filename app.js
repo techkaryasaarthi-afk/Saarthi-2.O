@@ -645,4 +645,110 @@
     );
   }
 
+  /* ==========================================================================
+     9. AUTHENTICATION & USER PROFILE CONTROLLER (Step 6)
+     ========================================================================== */
+  window.toggleUserMenu = function (e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('user-dropdown-menu');
+    if (menu) {
+      menu.classList.toggle('hidden');
+    }
+  };
+
+  window.signOutUser = function () {
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    const menu = document.getElementById('user-dropdown-menu');
+    if (profile && guestBtns) {
+      profile.classList.add('hidden');
+      guestBtns.classList.remove('hidden');
+    }
+    if (menu) menu.classList.add('hidden');
+    showToast("Signed out. Work session closed.");
+  };
+
+  window.openAuthModal = function (tab) {
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      window.switchAuthTab(tab || 'signin');
+    }
+  };
+
+  window.closeAuthModal = function () {
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  };
+
+  window.switchAuthTab = function (tab) {
+    const signinForm = document.getElementById('form-signin');
+    const signupForm = document.getElementById('form-signup');
+    const tabSignin = document.getElementById('auth-tab-signin');
+    const tabSignup = document.getElementById('auth-tab-signup');
+    if (tab === 'signup') {
+      signinForm?.classList.add('hidden');
+      signupForm?.classList.remove('hidden');
+      tabSignin?.classList.remove('active');
+      tabSignup?.classList.add('active');
+    } else {
+      signinForm?.classList.remove('hidden');
+      signupForm?.classList.add('hidden');
+      tabSignin?.classList.add('active');
+      tabSignup?.classList.remove('active');
+    }
+  };
+
+  window.handleAuthSubmit = function (e, type) {
+    if (e) e.preventDefault();
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    const nameEl = document.getElementById('user-display-name');
+    const menuName = document.getElementById('menu-user-name');
+    
+    let userName = "Damini Yadav";
+    if (type === 'signup') {
+      const inputName = document.getElementById('signup-name')?.value;
+      if (inputName) userName = inputName;
+    }
+    
+    if (nameEl) nameEl.innerText = userName;
+    if (menuName) menuName.innerText = userName;
+    
+    if (profile && guestBtns) {
+      profile.classList.remove('hidden');
+      guestBtns.classList.add('hidden');
+    }
+    window.closeAuthModal();
+    showToast(`Welcome back, ${userName}! Single Sign-On Active.`);
+  };
+
+  window.handleSsoLogin = function () {
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    if (profile && guestBtns) {
+      profile.classList.remove('hidden');
+      guestBtns.classList.add('hidden');
+    }
+    window.closeAuthModal();
+    showToast("Authenticated via Google Single Sign-On.");
+  };
+
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('user-dropdown-menu');
+    const badge = document.getElementById('user-profile-badge');
+    if (menu && !menu.contains(e.target) && (!badge || !badge.contains(e.target))) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeAuthModal();
+      document.getElementById('user-dropdown-menu')?.classList.add('hidden');
+    }
+  });
+
 })();
