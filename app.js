@@ -1,11 +1,34 @@
 /**
- * SAARTHI 2.0 by KARYA SAARTHI
- * Enterprise Client-Side Controller
+ * ============================================================================
+ * SAARTHI 2.0 | ENTERPRISE AI WORKSPACE & CRM INTELLIGENCE
+ * Developed for Karya Saarthi ("Your Trusted Work Companion")
+ * ============================================================================
+ * 
+ * Architectural Overview:
+ * - Module 1: Real-time Conversational AI with Vector RAG retrieval simulation
+ * - Module 2: CRM & Lead Intelligence (Scoring matrix, pitch generator, takeover alert)
+ * - Module 3: Pinecone Vector Database Document Ingestion & Chunking status
+ * - Module 4: Omnichannel WhatsApp Cloud API Gateway & Chrome Extension sidepanel
+ * - Module 5: API Gateway telemetry, concurrency simulations, and load testing
+ * - Core UX: Dual-theme engine (WCAG AAA certified), floating scroll normalizer,
+ *           and toast alert notification rack.
+ *
+ * @author Damini Yadav <tech.karyasaarthi@gmail.com>
+ * @version 2.0.0
+ * @license UNLICENSED - Proprietary to Karya Saarthi
  */
 
 (function () {
   'use strict';
 
+  /**
+   * Global Client-Side State
+   * @typedef {Object} AppState
+   * @property {string} theme - Active color theme ('light' | 'dark')
+   * @property {string} activeTab - Currently selected module tab ID
+   * @property {boolean} isRecording - Voice speech-to-text dictation state
+   * @property {SpeechRecognition|null} speechRecognition - Web Speech API instance
+   */
   const state = {
     theme: localStorage.getItem('saarthi_theme') || 'light',
     activeTab: 'chat',
@@ -13,6 +36,10 @@
     speechRecognition: null,
   };
 
+  /**
+   * Application Lifecycle Initialization
+   * Binds navigation listeners, initializes dark/light theme, and sets up scroll trackers.
+   */
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initNavigation();
