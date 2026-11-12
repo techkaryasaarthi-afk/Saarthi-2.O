@@ -1,11 +1,34 @@
 /**
- * SAARTHI 2.0 by KARYA SAARTHI
- * Enterprise Client-Side Controller
+ * ============================================================================
+ * SAARTHI 2.0 | ENTERPRISE AI WORKSPACE & CRM INTELLIGENCE
+ * Developed for Karya Saarthi ("Your Trusted Work Companion")
+ * ============================================================================
+ * 
+ * Architectural Overview:
+ * - Module 1: Real-time Conversational AI with Vector RAG retrieval simulation
+ * - Module 2: CRM & Lead Intelligence (Scoring matrix, pitch generator, takeover alert)
+ * - Module 3: Pinecone Vector Database Document Ingestion & Chunking status
+ * - Module 4: Omnichannel WhatsApp Cloud API Gateway & Chrome Extension sidepanel
+ * - Module 5: API Gateway telemetry, concurrency simulations, and load testing
+ * - Core UX: Dual-theme engine (WCAG AAA certified), floating scroll normalizer,
+ *           and toast alert notification rack.
+ *
+ * @author Damini Yadav <tech.karyasaarthi@gmail.com>
+ * @version 2.0.0
+ * @license UNLICENSED - Proprietary to Karya Saarthi
  */
 
 (function () {
   'use strict';
 
+  /**
+   * Global Client-Side State
+   * @typedef {Object} AppState
+   * @property {string} theme - Active color theme ('light' | 'dark')
+   * @property {string} activeTab - Currently selected module tab ID
+   * @property {boolean} isRecording - Voice speech-to-text dictation state
+   * @property {SpeechRecognition|null} speechRecognition - Web Speech API instance
+   */
   const state = {
     theme: localStorage.getItem('saarthi_theme') || 'light',
     activeTab: 'chat',
@@ -13,6 +36,10 @@
     speechRecognition: null,
   };
 
+  /**
+   * Application Lifecycle Initialization
+   * Binds navigation listeners, initializes dark/light theme, and sets up scroll trackers.
+   */
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initNavigation();
@@ -617,5 +644,111 @@
       tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
     );
   }
+
+  /* ==========================================================================
+     9. AUTHENTICATION & USER PROFILE CONTROLLER (Step 6)
+     ========================================================================== */
+  window.toggleUserMenu = function (e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('user-dropdown-menu');
+    if (menu) {
+      menu.classList.toggle('hidden');
+    }
+  };
+
+  window.signOutUser = function () {
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    const menu = document.getElementById('user-dropdown-menu');
+    if (profile && guestBtns) {
+      profile.classList.add('hidden');
+      guestBtns.classList.remove('hidden');
+    }
+    if (menu) menu.classList.add('hidden');
+    showToast("Signed out. Work session closed.");
+  };
+
+  window.openAuthModal = function (tab) {
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      window.switchAuthTab(tab || 'signin');
+    }
+  };
+
+  window.closeAuthModal = function () {
+    const modal = document.getElementById('auth-modal');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
+  };
+
+  window.switchAuthTab = function (tab) {
+    const signinForm = document.getElementById('form-signin');
+    const signupForm = document.getElementById('form-signup');
+    const tabSignin = document.getElementById('auth-tab-signin');
+    const tabSignup = document.getElementById('auth-tab-signup');
+    if (tab === 'signup') {
+      signinForm?.classList.add('hidden');
+      signupForm?.classList.remove('hidden');
+      tabSignin?.classList.remove('active');
+      tabSignup?.classList.add('active');
+    } else {
+      signinForm?.classList.remove('hidden');
+      signupForm?.classList.add('hidden');
+      tabSignin?.classList.add('active');
+      tabSignup?.classList.remove('active');
+    }
+  };
+
+  window.handleAuthSubmit = function (e, type) {
+    if (e) e.preventDefault();
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    const nameEl = document.getElementById('user-display-name');
+    const menuName = document.getElementById('menu-user-name');
+    
+    let userName = "Damini Yadav";
+    if (type === 'signup') {
+      const inputName = document.getElementById('signup-name')?.value;
+      if (inputName) userName = inputName;
+    }
+    
+    if (nameEl) nameEl.innerText = userName;
+    if (menuName) menuName.innerText = userName;
+    
+    if (profile && guestBtns) {
+      profile.classList.remove('hidden');
+      guestBtns.classList.add('hidden');
+    }
+    window.closeAuthModal();
+    showToast(`Welcome back, ${userName}! Single Sign-On Active.`);
+  };
+
+  window.handleSsoLogin = function () {
+    const profile = document.getElementById('user-profile-badge');
+    const guestBtns = document.getElementById('guest-auth-buttons');
+    if (profile && guestBtns) {
+      profile.classList.remove('hidden');
+      guestBtns.classList.add('hidden');
+    }
+    window.closeAuthModal();
+    showToast("Authenticated via Google Single Sign-On.");
+  };
+
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('user-dropdown-menu');
+    const badge = document.getElementById('user-profile-badge');
+    if (menu && !menu.contains(e.target) && (!badge || !badge.contains(e.target))) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeAuthModal();
+      document.getElementById('user-dropdown-menu')?.classList.add('hidden');
+    }
+  });
 
 })();

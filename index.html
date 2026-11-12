@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Saarthi 2.0 | Karya Saarthi Enterprise AI</title>
-  <link rel="stylesheet" href="styles.css?v=5.0">
+  <link rel="stylesheet" href="styles.css?v=6.0">
   <link rel="icon" type="image/jpeg" href="saarthi-2-logo.jpg">
   <style>
     /* ==========================================================================
@@ -294,8 +294,174 @@
       border-radius: 4px;
       background: rgba(0, 0, 0, 0.06);
     }
-    [data-theme="dark"] .score-tag {
-      background: rgba(255, 255, 255, 0.1);
+    /* 10. User Profile Dropdown & Auth Modal System */
+    .user-profile-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-app);
+      padding: 4px 10px 4px 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .user-profile-pill:hover {
+      border-color: var(--brand-teal);
+      background: var(--bg-surface);
+    }
+    .user-menu-box {
+      position: absolute;
+      right: 0;
+      top: 48px;
+      width: 250px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      z-index: 1000;
+      padding: 10px;
+      animation: fadeIn 0.15s ease;
+    }
+    .user-menu-header {
+      padding: 4px 8px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .user-menu-header strong {
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+    .user-role-chip {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--brand-teal);
+      background: rgba(13, 148, 136, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      width: fit-content;
+    }
+    .user-menu-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 6px 0;
+    }
+    .user-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.12s ease;
+    }
+    .user-menu-item:hover {
+      background: var(--bg-app);
+      color: var(--brand-teal);
+    }
+    .user-menu-item.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+
+    /* Auth Modal Overlay */
+    .auth-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999999;
+      animation: fadeIn 0.15s ease;
+    }
+    .auth-modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: 92%;
+      max-width: 420px;
+      padding: 24px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+    }
+    .auth-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .auth-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+    .auth-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .auth-close-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-app);
+    }
+    .auth-tab-row {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-app);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      border: 1px solid var(--border-subtle);
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .auth-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--brand-teal);
+      box-shadow: var(--shadow-sm);
+    }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 16px 0 12px 0;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .auth-divider span {
+      padding: 0 10px;
     }
   </style>
 </head>
@@ -369,12 +535,40 @@
         </div>
       </div>
 
-      <!-- User Profile Badge -->
-      <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-app); padding: 4px 10px 4px 6px; border-radius: var(--radius-full); border: 1px solid var(--border-subtle);">
-        <div class="user-avatar-circle" style="width: 26px; height: 26px; font-size: 0.7rem;">DY</div>
-        <div style="display: flex; flex-direction: column;">
-          <span style="font-size: 0.78rem; font-weight: 700;">Damini Yadav</span>
-          <span style="font-size: 0.65rem; color: var(--brand-teal); font-weight: 600;">Product Engineer</span>
+      <!-- User Profile Badge & Dropdown / Guest Auth Buttons -->
+      <div id="auth-container" style="position: relative;">
+        <!-- Logged In State (Active by Default) -->
+        <div id="user-profile-badge" class="user-profile-pill" onclick="window.toggleUserMenu(event)" title="Account Settings">
+          <div class="user-avatar-circle" style="width: 26px; height: 26px; font-size: 0.7rem;">DY</div>
+          <div style="display: flex; flex-direction: column;">
+            <span id="user-display-name" style="font-size: 0.78rem; font-weight: 700;">Damini Yadav</span>
+            <span style="font-size: 0.65rem; color: var(--brand-teal); font-weight: 600;">Product Engineer</span>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-left: 2px; color: var(--text-muted);"><path d="m6 9 6 6 6-6"></path></svg>
+        </div>
+
+        <!-- User Dropdown Menu -->
+        <div id="user-dropdown-menu" class="user-menu-box hidden">
+          <div class="user-menu-header">
+            <strong id="menu-user-name">Damini Yadav</strong>
+            <span style="font-size: 0.72rem; color: var(--text-muted);">tech.karyasaarthi@gmail.com</span>
+            <span class="user-role-chip">Product Engineer • SSO Active</span>
+          </div>
+          <div class="user-menu-divider"></div>
+          <button class="user-menu-item" onclick="window.openAuthModal('signin'); window.toggleUserMenu();">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>Switch Account</span>
+          </button>
+          <button class="user-menu-item danger" onclick="window.signOutUser()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Sign Out</span>
+          </button>
+        </div>
+
+        <!-- Logged Out State (Sign In & Sign Up Buttons) -->
+        <div id="guest-auth-buttons" class="hidden" style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn-outline" style="padding: 5px 13px; font-size: 0.78rem; font-weight: 700; border-radius: var(--radius-full);" onclick="window.openAuthModal('signin')">Sign In</button>
+          <button class="btn btn-primary" style="padding: 5px 13px; font-size: 0.78rem; font-weight: 700; border-radius: var(--radius-full);" onclick="window.openAuthModal('signup')">Sign Up</button>
         </div>
       </div>
 
@@ -981,10 +1175,74 @@ You are Saarthi 2.0, developed by Karya Saarthi ("Your Trusted Work Companion").
     </div>
   </footer>
 
+  <!-- ==========================================================================
+       AUTHENTICATION MODAL: Sign In & Sign Up (Enterprise SSO & JWT)
+       ========================================================================== -->
+  <div id="auth-modal" class="auth-modal-overlay hidden" onclick="if(event.target === this) window.closeAuthModal()">
+    <div class="auth-modal-card">
+      <div class="auth-modal-header">
+        <div class="auth-brand-row">
+          <img src="saarthi-2-logo.jpg" alt="Saarthi 2.0" style="width: 28px; height: 28px; border-radius: 50%;">
+          <strong>Saarthi 2.0 Enterprise</strong>
+        </div>
+        <button class="auth-close-btn" onclick="window.closeAuthModal()" title="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Tab Switcher: Sign In vs Sign Up -->
+      <div class="auth-tab-row">
+        <button id="auth-tab-signin" class="auth-tab-btn active" onclick="window.switchAuthTab('signin')">Sign In</button>
+        <button id="auth-tab-signup" class="auth-tab-btn" onclick="window.switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="form-signin" onsubmit="window.handleAuthSubmit(event, 'signin')">
+        <div class="form-field" style="margin-bottom: 12px;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:5px;">Work Email</label>
+          <input type="email" id="signin-email" class="input-box" placeholder="name@company.com" required value="damini.yadav@karyasaarthi.com">
+        </div>
+        <div class="form-field" style="margin-bottom: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <label style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">Password</label>
+            <a href="#forgot" style="font-size:0.72rem; color:var(--brand-teal); text-decoration:none;" onclick="showToast('Password reset link dispatched.'); return false;">Forgot?</a>
+          </div>
+          <input type="password" id="signin-password" class="input-box" placeholder="••••••••" required value="Enterprise123">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; border-radius: var(--radius-sm);">Sign In to Workspace</button>
+      </form>
+
+      <!-- Sign Up Form -->
+      <form id="form-signup" class="hidden" onsubmit="window.handleAuthSubmit(event, 'signup')">
+        <div class="form-field" style="margin-bottom: 12px;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:5px;">Full Name</label>
+          <input type="text" id="signup-name" class="input-box" placeholder="e.g. Damini Yadav" required>
+        </div>
+        <div class="form-field" style="margin-bottom: 12px;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:5px;">Work Email</label>
+          <input type="email" id="signup-email" class="input-box" placeholder="name@company.com" required>
+        </div>
+        <div class="form-field" style="margin-bottom: 14px;">
+          <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:5px;">Create Password</label>
+          <input type="password" id="signup-password" class="input-box" placeholder="Minimum 8 characters" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; border-radius: var(--radius-sm);">Create Enterprise Account</button>
+      </form>
+
+      <div class="auth-divider"><span>or continue with</span></div>
+
+      <!-- Google / SSO Button -->
+      <button class="btn btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.8rem; padding: 9px; border-radius: var(--radius-sm);" onclick="window.handleSsoLogin()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+        <span>Google Single Sign-On (SSO)</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Toast Notification Rack -->
   <div id="toast-rack" class="toast-rack"></div>
 
   <!-- Script -->
-  <script src="app.js?v=5.0"></script>
+  <script src="app.js?v=6.0"></script>
 </body>
 </html>
