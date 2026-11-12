@@ -1,0 +1,20 @@
+{
+  "name": "saarthi-2.0",
+  "version": "2.0.0",
+  "description": "Karya Saarthi & Saarthi 2.0 Enterprise AI Workspace",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "karya-saarthi",
+    "saarthi-2.0",
+    "enterprise-ai",
+    "crm",
+    "rag"
+  ],
+  "author": "Damini Yadav",
+  "license": "UNLICENSED"
+}
